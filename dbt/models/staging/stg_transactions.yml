@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: "Cleaned and typed transactions with derived fields"
+    columns:
+      - name: transaction_ts
+        description: "Transaction timestamp"
+        tests:
+          - not_null
+      - name: transaction_date
+        tests:
+          - not_null
+      - name: merch
+        tests:
+          - not_null
+      - name: cat_id
+        tests:
+          - not_null
+      - name: amount
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+      - name: gender
+        tests:
+          - accepted_values:
+              values: ['M', 'F']
+      - name: us_state
+        tests:
+          - not_null
+      - name: target
+        tests:
+          - accepted_values:
+              values: [0, 1]

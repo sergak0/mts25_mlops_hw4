@@ -1,0 +1,23 @@
+name: 'transactions_dbt'
+version: '1.0.0'
+config-version: 2
+
+profile: 'transactions_clickhouse'  # имя профиля в ~/.dbt/profiles.yml
+
+model-paths: ['models']
+macro-paths: ['macros']
+test-paths: ['tests']
+seed-paths: ['seeds']
+snapshot-paths: ['snapshots']
+
+models:
+  transactions_dbt:
+    +materialized: view
+
+    staging:
+      +schema: staging
+      +materialized: view
+
+    marts:
+      +schema: marts
+      +materialized: table

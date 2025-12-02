@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: transactions_db
+    description: "Raw transactions table in ClickHouse with fraud label"
+    database: transactions_db
+    schema: transactions_db
+    tables:
+      - name: transactions
+        description: "Raw credit card transactions with fraud target"
+        loaded_at_field: transaction_time
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        columns:
+          - name: transaction_time
+            description: "Timestamp of the transaction"
+          - name: merch
+            description: "Merchant / point of sale identifier"
+          - name: cat_id
+            description: "Category ID of transaction"
+          - name: amount
+            description: "Transaction amount"
+          - name: gender
+            description: "Customer gender"
+          - name: us_state
+            description: "US state"
+          - name: target
+            description: "Fraud flag 0/1"

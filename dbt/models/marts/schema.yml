@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: mart_daily_state_metrics
+    description: "Daily metrics per US state"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [transaction_date, us_state]
+    columns:
+      - name: high_amount_share_pct
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_fraud_by_category
+    description: "Fraud analysis by category"
+    columns:
+      - name: cat_id
+        tests:
+          - not_null
+      - name: fraud_rate
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_fraud_by_state
+    description: "Fraud analysis by US state"
+    columns:
+      - name: fraud_rate
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_customer_risk_profile
+    description: "Customer risk profile"
+    columns:
+      - name: risk_bucket
+        tests:
+          - accepted_values:
+              values: ['LOW', 'MEDIUM', 'HIGH']
+
+  - name: mart_hourly_fraud_pattern
+    description: "Hourly fraud pattern by DOW + hour"
+    columns:
+      - name: fraud_rate
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_merchant_analytics
+    description: "Merchant-level fraud analytics"
+    columns:
+      - name: is_suspicious
+        tests:
+          - accepted_values:
+              values: [0, 1]

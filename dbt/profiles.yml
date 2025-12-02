@@ -1,0 +1,12 @@
+transactions_clickhouse:
+  target: dev
+  outputs:
+    dev:
+      type: clickhouse
+      schema: transactions_db
+      host: localhost
+      port: 8123
+      user: click
+      password: click
+      secure: False
+      threads: 4

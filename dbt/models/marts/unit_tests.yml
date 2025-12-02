@@ -1,0 +1,89 @@
+             version: 2
+
+unit_tests:
+  - name: mart_fraud_by_category_unit
+    description: "Проверяем, что fraud_rate и fraud_tx_count считаются корректно"
+    model: mart_fraud_by_category
+
+    given:
+      - input: ref('stg_transactions')
+        rows:
+          # Первая транзакция в категории A, не фрод
+          - transaction_ts: "2025-01-01 10:00:00"
+            transaction_date: "2025-01-01"
+            transaction_hour: 10
+            transaction_dow: 3
+            merch: "M1"
+            cat_id: "A"
+            amount: 100
+            name_1: "John"
+            name_2: "Doe"
+            gender: "M"
+            street: "Street 1"
+            one_city: "City 1"
+            us_state: "CA"
+            post_code: "00000"
+            lat: 0.0
+            lon: 0.0
+            population_city: 0
+            jobs: "Job"
+            merchant_lat: 0.0
+            merchant_lon: 0.0
+            target: 0
+            amount_bucket: "LOW"
+            is_fraud: 0
+
+          # Вторая транзакция в категории A, фрод
+          - transaction_ts: "2025-01-01 11:00:00"
+            transaction_date: "2025-01-01"
+            transaction_hour: 11
+            transaction_dow: 3
+            merch: "M1"
+            cat_id: "A"
+            amount: 200
+            name_1: "John"
+            name_2: "Doe"
+            gender: "M"
+            street: "Street 1"
+            one_city: "City 1"
+            us_state: "CA"
+            post_code: "00000"
+            lat: 0.0
+            lon: 0.0
+            population_city: 0
+            jobs: "Job"
+            merchant_lat: 0.0
+            merchant_lon: 0.0
+            target: 1
+            amount_bucket: "HIGH"
+            is_fraud: 1
+
+          # Одна транзакция в категории B, без фрода
+          - transaction_ts: "2025-01-01 12:00:00"
+            transaction_date: "2025-01-01"
+            transaction_hour: 12
+            transaction_dow: 3
+            merch: "M2"
+            cat_id: "B"
+            amount: 50
+            name_1: "Alice"
+            name_2: "Smith"
+            gender: "F"
+            street: "Street 2"
+            one_city: "City 2"
+            us_state: "NY"
+            post_code: "11111"
+            lat: 0.0
+            lon: 0.0
+            population_city: 0
+            jobs: "Job"
+            merchant_lat: 0.0
+            merchant_lon: 0.0
+            target: 0
+            amount_bucket: "LOW"
+            is_fraud: 0
+
+    expect:
+      rows:
+        - {cat_id: "A", tx_count: 2, fraud_tx_count: 1}
+        - {cat_id: "B", tx_count: 1, fraud_tx_count: 0}
